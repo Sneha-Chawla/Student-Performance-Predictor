@@ -1,0 +1,91 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Background */
+.app {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+/* Card */
+.card {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 15px;
+  width: 350px;
+  color: white;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+}
+
+/* Title */
+.card h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Inputs */
+input, select {
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: none;
+  background: #334155;
+  color: white;
+}
+
+input:focus, select:focus {
+  outline: 2px solid #3b82f6;
+}
+
+/* Button */
+button {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: #3b82f6;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #2563eb;
+  transform: scale(1.05);
+}
+
+/* Result box */
+.result {
+  margin-top: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #3b82f6, #6366f1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.result h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.suggestion {
+  margin-top: 10px;
+  font-size: 14px;
+}
