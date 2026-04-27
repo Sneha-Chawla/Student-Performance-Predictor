@@ -12,7 +12,7 @@ function App() {
   });
 
   const [result, setResult] = useState(null);
-  const [loading, setLoading] = useState(false); // 1. Added loading state
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,13 +20,13 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
+    setResult(null); // Clear previous results
 
     try {
-      // 2. CHANGE THIS URL to your Render Backend URL
-      // It should look like: https://student-performance-backend.onrender.com/predict
+      // NOTE: Added "/predict" to your base Render URL
       const res = await fetch(
-        "https://student-performance-predictor-2-1zbc.onrender.com",
+        "https://student-performance-predictor-2-1zbc.onrender.com/predict",
         {
           method: "POST",
           headers: {
@@ -43,16 +43,19 @@ function App() {
         },
       );
 
-      if (!res.ok) throw new Error("Server error");
+      if (!res.ok) {
+        throw new Error("Backend is still waking up...");
+      }
 
       const data = await res.json();
       setResult(data);
     } catch (err) {
-      console.error(err);
-      // 3. Updated alert for Render's free tier sleep mode
-      alert("The server is waking up! Please wait 30 seconds and try again.");
+      console.error("Connection Error:", err);
+      alert(
+        "The server is taking a moment to wake up. Please wait 30 seconds and try again!",
+      );
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -60,74 +63,100 @@ function App() {
     <div className="app">
       <div className="card">
         <h1>🎓 Student Performance Predictor</h1>
+        <p className="subtitle">Enter details to predict your academic score</p>
 
         <form onSubmit={handleSubmit}>
-          <label>Study Hours</label>
-          <input
-            name="Hours_Studied"
-            type="number"
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Study Hours</label>
+            <input
+              name="Hours_Studied"
+              type="number"
+              onChange={handleChange}
+              required
+              placeholder="e.g. 5"
+            />
+          </div>
 
-          <label>Attendance (%)</label>
-          <input
-            name="Attendance"
-            type="number"
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Attendance (%)</label>
+            <input
+              name="Attendance"
+              type="number"
+              onChange={handleChange}
+              required
+              placeholder="e.g. 85"
+            />
+          </div>
 
-          <label>Sleep Hours</label>
-          <input
-            name="Sleep_Hours"
-            type="number"
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Sleep Hours</label>
+            <input
+              name="Sleep_Hours"
+              type="number"
+              onChange={handleChange}
+              required
+              placeholder="e.g. 7"
+            />
+          </div>
 
-          <label>Previous Score</label>
-          <input
-            name="Previous_Scores"
-            type="number"
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Previous Score</label>
+            <input
+              name="Previous_Scores"
+              type="number"
+              onChange={handleChange}
+              required
+              placeholder="e.g. 70"
+            />
+          </div>
 
-          <label>Motivation Level</label>
-          <select name="Motivation_Level" onChange={handleChange} required>
-            <option value="">Select</option>
-            <option value="0">Low</option>
-            <option value="1">Medium</option>
-            <option value="2">High</option>
-          </select>
+          <div className="input-group">
+            <label>Motivation Level</label>
+            <select name="Motivation_Level" onChange={handleChange} required>
+              <option value="">Select</option>
+              <option value="0">Low</option>
+              <option value="1">Medium</option>
+              <option value="2">High</option>
+            </select>
+          </div>
 
-          <label>Tutoring Sessions</label>
-          <input
-            name="Tutoring_Sessions"
-            type="number"
-            onChange={handleChange}
-            required
-          />
+          <div className="input-group">
+            <label>Tutoring Sessions</label>
+            <input
+              name="Tutoring_Sessions"
+              type="number"
+              onChange={handleChange}
+              required
+              placeholder="e.g. 2"
+            />
+          </div>
 
-          {/* 4. Disable button while loading */}
-          <button type="submit" disabled={loading}>
-            {loading ? "Waking up Server... ⏳" : "Predict 🚀"}
+          <button type="submit" className="predict-btn" disabled={loading}>
+            {loading ? "Waking up Server... ⏳" : "Predict Performance 🚀"}
           </button>
         </form>
 
         {result && (
-          <div className="result">
-            <h2>Score: {result.predicted_score}</h2>
-            <p>Status: {result.performance}</p>
+          <div className="result-area">
+            <hr />
+            <div className="result-card">
+              <h2>
+                Predicted Score:{" "}
+                <span className="score">{result.predicted_score}</span>
+              </h2>
+              <p className="status-tag">
+                Performance: <strong>{result.performance}</strong>
+              </p>
 
-            <div className="suggestion">
-              {result.predicted_score < 60 &&
-                "⚠️ Increase study hours & consistency"}
-              {result.predicted_score >= 60 &&
-                result.predicted_score < 75 &&
-                "👍 You're doing good, improve slightly"}
-              {result.predicted_score >= 75 && "🔥 Excellent performance!"}
+              <div className="suggestion-box">
+                {result.predicted_score < 60 &&
+                  "⚠️ Focus on increasing study hours and consistency."}
+                {result.predicted_score >= 60 &&
+                  result.predicted_score < 75 &&
+                  "👍 Good job! A little more effort will yield great results."}
+                {result.predicted_score >= 75 &&
+                  "🔥 Excellent! Keep maintaining this pace."}
+              </div>
             </div>
           </div>
         )}
